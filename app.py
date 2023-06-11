@@ -8,7 +8,7 @@ st.markdown("<h1 style='text-align: center;'>AVA - a totally harmless chatbot ğŸ
 
 # Set org ID and API key
 #openai.organization = "<YOUR_OPENAI_ORG_ID>"
-openai.api_key = st.secrets.db_credentials.keys
+openai.api_key = st.secrets["db_keys"]
 
 # Initialise session state variables
 if 'generated' not in st.session_state:
