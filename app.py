@@ -32,6 +32,7 @@ if 'game_started' not in st.session_state:
     st.session_state['game_started'] = 0
 
 
+
 # Sidebar - let user choose model, show total cost of current conversation, and let user clear the current conversation
 st.sidebar.title("Sidebar")
 model_name = st.sidebar.radio("Choose a model:", ("GPT-3.5", "GPT-4"))
@@ -105,6 +106,7 @@ with container:
 
         starting_input = 'I want to learn about Kasparov. Who is Kasparov? '
         output, total_tokens, prompt_tokens, completion_tokens = generate_response(starting_input)
+        #st.session_state['messages'].append({"role": "user", "content": starting_input})
         st.session_state['past'].append(starting_input)
         st.session_state['generated'].append(output)
         st.session_state['model_name'].append(model_name)
