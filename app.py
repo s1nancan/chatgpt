@@ -4,7 +4,7 @@ from streamlit_chat import message
 
 # Setting page title and header
 st.set_page_config(page_title="TEST", page_icon=":robot_face:")
-st.markdown("<h1 style='text-align: center;'>TESTGPT - a totally harmless chatbot </h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>TriviaGPT - a fun trivia game to play </h1>", unsafe_allow_html=True)
 
 # Set org ID and API key
 #openai.organization = "<YOUR_OPENAI_ORG_ID>"
@@ -17,7 +17,7 @@ if 'past' not in st.session_state:
     st.session_state['past'] = []
 if 'messages' not in st.session_state:
     st.session_state['messages'] = [
-        {"role": "system", "content": "You are a helpful assistant."}
+        {"role": "system", "content": "You are a game mediator in a trivia game that will ask questions as prompted by the user when user says start game. You will ask 5 questions and at the end give a summary. "}
     ]
 if 'model_name' not in st.session_state:
     st.session_state['model_name'] = []
@@ -51,7 +51,7 @@ if clear_button:
     st.session_state['generated'] = []
     st.session_state['past'] = []
     st.session_state['messages'] = [
-        {"role": "system", "content": "You are a helpful assistant."}
+        {"role": "system", "content": "You are a game mediator in a trivia game that will ask questions as prompted by the user, when user says start game. You will ask 5 questions, at the end give a summary."}
     ]
     st.session_state['number_tokens'] = []
     st.session_state['model_name'] = []
@@ -80,18 +80,22 @@ def generate_response(prompt):
 
 
 
-# Create a placeholder for the button
-button_placeholder = st.empty()
+# # Create a placeholder for the button
+# button_placeholder = st.empty()
 
-# Check if the button has been clicked
-button_clicked = button_placeholder.button('Start Game')
+# # Check if the button has been clicked
+# button_clicked = button_placeholder.button('Start Game')
 
-# Change the button text after it is clicked
-if button_clicked:
-    #st.write('Button clicked!')
-    button_placeholder.empty()  # Clear the button
-    button_placeholder.button('Game Started')
-    st.session_state['game_started'] = 1
+# # Change the button text after it is clicked
+# if button_clicked:
+#     #st.write('Button clicked!')
+#     button_placeholder.empty()  # Clear the button
+#     button_placeholder.button('Game Started')
+#     st.session_state['game_started'] = 1
+
+
+st.write('Prompt "start game" to start the game')
+
 
 # container for chat history
 response_container = st.container()
@@ -100,25 +104,25 @@ container = st.container()
 
 with container:
 
-    if st.session_state['game_started'] == 1:
-        st.session_state['game_started'] = 2
-        st.write('Welcome to The GAME')
+    # if st.session_state['game_started'] == 1:
+    #     st.session_state['game_started'] = 2
+    #     st.write('Welcome to The GAME')
 
-        starting_input = 'I want to learn about Kasparov. Who is Kasparov? '
-        output, total_tokens, prompt_tokens, completion_tokens = generate_response(starting_input)
-        #st.session_state['messages'].append({"role": "user", "content": starting_input})
-        st.session_state['past'].append(starting_input)
-        st.session_state['generated'].append(output)
-        st.session_state['model_name'].append(model_name)
-        st.session_state['total_tokens'].append(total_tokens)
+    #     starting_input = 'I want to learn about Kasparov. Who is Kasparov? '
+    #     output, total_tokens, prompt_tokens, completion_tokens = generate_response(starting_input)
+    #     #st.session_state['messages'].append({"role": "user", "content": starting_input})
+    #     st.session_state['past'].append(starting_input)
+    #     st.session_state['generated'].append(output)
+    #     st.session_state['model_name'].append(model_name)
+    #     st.session_state['total_tokens'].append(total_tokens)
 
-        if model_name == "GPT-3.5":
-            cost = total_tokens * 0.002 / 1000
-        else:
-            cost = (prompt_tokens * 0.03 + completion_tokens * 0.06) / 1000
+    #     if model_name == "GPT-3.5":
+    #         cost = total_tokens * 0.002 / 1000
+    #     else:
+    #         cost = (prompt_tokens * 0.03 + completion_tokens * 0.06) / 1000
 
-        st.session_state['cost'].append(cost)
-        st.session_state['total_cost'] += cost
+    #     st.session_state['cost'].append(cost)
+    #     st.session_state['total_cost'] += cost
 
     with st.form(key='my_form', clear_on_submit=True):
         user_input = st.text_area("You:", key='input', height=100)
@@ -140,6 +144,23 @@ with container:
         st.session_state['cost'].append(cost)
         st.session_state['total_cost'] += cost
 
+
+
+restart_button = st.button("Restart Game", key="restart")
+
+# reset everything
+if restart_button:
+    st.session_state['generated'] = []
+    st.session_state['past'] = []
+    st.session_state['messages'] = [
+        {"role": "system", "content": "You are a game mediator in a trivia game that will ask questions as prompted by the user, when user says start game. You will ask 5 questions, at the end give a summary."}
+    ]
+    st.session_state['number_tokens'] = []
+    st.session_state['model_name'] = []
+    st.session_state['cost'] = []
+    st.session_state['total_cost'] = 0.0
+    st.session_state['total_tokens'] = []
+
 if st.session_state['generated']:
     with response_container:
         for i in range(len(st.session_state['generated'])):
@@ -148,3 +169,4 @@ if st.session_state['generated']:
             st.write(
                 f"Model used: {st.session_state['model_name'][i]}; Number of tokens: {st.session_state['total_tokens'][i]}; Cost: ${st.session_state['cost'][i]:.5f}")
             counter_placeholder.write(f"Total cost of this conversation: ${st.session_state['total_cost']:.5f}")
+
