@@ -3,8 +3,8 @@ import streamlit as st
 from streamlit_chat import message
 
 # Setting page title and header
-st.set_page_config(page_title="AVA", page_icon=":robot_face:")
-st.markdown("<h1 style='text-align: center;'>AVA - a totally harmless chatbot 😬</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="TEST", page_icon=":robot_face:")
+st.markdown("<h1 style='text-align: center;'>TESTGPT - a totally harmless chatbot </h1>", unsafe_allow_html=True)
 
 # Set org ID and API key
 #openai.organization = "<YOUR_OPENAI_ORG_ID>"
