@@ -94,7 +94,7 @@ def generate_response(prompt):
 #     st.session_state['game_started'] = 1
 
 
-st.write('Prompt "start game" to start the game')
+st.write('Welcome to the ChatGPT trivia night! You will get 5 questions about anything and everything. Test your knowledge! \n Type "start game" to start the game')
 
 
 # container for chat history
