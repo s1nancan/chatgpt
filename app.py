@@ -28,6 +28,10 @@ if 'total_tokens' not in st.session_state:
 if 'total_cost' not in st.session_state:
     st.session_state['total_cost'] = 0.0
 
+if 'game_started' not in st.session_state:
+    st.session_state['game_started'] = 0
+
+
 # Sidebar - let user choose model, show total cost of current conversation, and let user clear the current conversation
 st.sidebar.title("Sidebar")
 model_name = st.sidebar.radio("Choose a model:", ("GPT-3.5", "GPT-4"))
@@ -74,12 +78,46 @@ def generate_response(prompt):
     return response, total_tokens, prompt_tokens, completion_tokens
 
 
+
+# Create a placeholder for the button
+button_placeholder = st.empty()
+
+# Check if the button has been clicked
+button_clicked = button_placeholder.button('Start Game')
+
+# Change the button text after it is clicked
+if button_clicked:
+    #st.write('Button clicked!')
+    button_placeholder.empty()  # Clear the button
+    button_placeholder.button('Game Started')
+    st.session_state['game_started'] = 1
+
 # container for chat history
 response_container = st.container()
 # container for text box
 container = st.container()
 
 with container:
+
+    if st.session_state['game_started'] == 1:
+        st.session_state['game_started'] = 2
+        st.write('Welcome to The GAME')
+
+        starting_input = 'I want to learn about Kasparov. Who is Kasparov? '
+        output, total_tokens, prompt_tokens, completion_tokens = generate_response(starting_input)
+        st.session_state['past'].append(starting_input)
+        st.session_state['generated'].append(output)
+        st.session_state['model_name'].append(model_name)
+        st.session_state['total_tokens'].append(total_tokens)
+
+        if model_name == "GPT-3.5":
+            cost = total_tokens * 0.002 / 1000
+        else:
+            cost = (prompt_tokens * 0.03 + completion_tokens * 0.06) / 1000
+
+        st.session_state['cost'].append(cost)
+        st.session_state['total_cost'] += cost
+
     with st.form(key='my_form', clear_on_submit=True):
         user_input = st.text_area("You:", key='input', height=100)
         submit_button = st.form_submit_button(label='Send')
